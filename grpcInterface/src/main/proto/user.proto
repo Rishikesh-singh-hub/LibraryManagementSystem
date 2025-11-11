@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+// These options control how Java files are generated
+option java_multiple_files = true;
+option java_package = "com.microservice.grpc.user";
+option java_outer_classname = "UserProto";
+
+package user;
+//import "book.proto";
+
+// --- Messages (like DTOs) ---
+
+// Request message for fetching a user
+message UserRequest {
+    string id = 1; // userId
+}
+
+//Update books request
+message IssueUserRequest{
+    bool issue =1;
+    int32  count =2;
+    string id =3;
+}
+
+//Update books response
+message IssueUserResponse{
+    int32  count =1;
+    string id =2;
+}
+
+// Response message for returning user data
+message UserResponse {
+    string id = 1;
+    string username = 2;
+    string email = 3;
+    repeated string roles = 4;
+    int32 booksIssuedCount = 5;
+    int32 maxBooksAllowed = 6;
+    bool hasPendingFines = 7;
+    string createdDate = 8;
+    bool active = 9;
+}
+
+// Request for creating a new user
+message CreateUserRequest {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+    string role = 4;
+}
+
+// Response after creating a user
+message CreateUserResponse {
+    string message = 1;
+    string id = 2;
+}
+
+// Request for listing all users
+message Empty {}
+
+message UsersList {
+    repeated UserResponse users = 1; // list of users
+}
+
+ //--- Service Definition ---
+
+service UserService {
+    // Get a single user by ID
+    rpc GetUserById(UserRequest) returns (UserResponse);
+
+    // Create a new user
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+    // List all users
+    rpc GetAllUsers(Empty) returns (UsersList);
+
+    //Issue books update to user
+    rpc IssueBooksUpdate(IssueUserRequest) returns (UserResponse);
+}

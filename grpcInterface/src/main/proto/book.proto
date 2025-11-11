@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.microservice.grpc.book";
+option java_outer_classname = "BookProto";
+
+package book;
+
+// -------------------- BOOK SERVICE --------------------
+service BookService {
+    rpc GetBookById (BookIdRequest) returns (BookResponse);
+    rpc GetAllBooks (EmptyRequest) returns (BookListResponse);
+    rpc AddBook ( CreateListBook) returns (EmptyRequest);
+    rpc DeleteBook (BookIdRequest) returns (EmptyRequest);
+    rpc IssueBook (IssueBookRequest) returns (EmptyRequest);
+    rpc ReturnBook (ReturnBookRequest) returns (ReturnBookResponse);
+}
+
+// -------------------- MESSAGES --------------------
+
+// CreateBookList
+
+message CreateListBook{
+   repeated CreateBookRequest book_request = 1;
+}
+
+// Request to get a book by its ID
+message BookIdRequest {
+    string bookId = 1;
+}
+
+// Empty request (for fetching all books)
+message EmptyRequest {}
+
+enum BookStatus {
+    ACTIVE = 0;
+    DAMAGED = 1;
+    ARCHIVED = 2;
+}
+
+// CreateBookRequest mirrors your NewBookDto
+message CreateBookRequest {
+    string title = 1;          // cannot be blank
+    string author = 2;         // cannot be blank
+    string genre = 3;          // default = "General"
+    string publisher = 4;      // default = "Unknown"
+    int32 publicationYear = 5; // default = current year
+    int32 totalCopies = 6;     // must be >= 1
+    int32 availableCopies = 7; // must be >= 0
+    string location = 8;       // default = "Main Shelf"
+    string status = 9;     // default = ACTIVE
+}
+
+// Response containing one book
+message BookResponse {
+    string id = 1;
+    string title = 2;
+    string author = 3;
+    string genre = 4;
+    string publisher = 5;
+    int32 totalCopies = 6;
+    int32 availableCopies = 7;
+    string location = 8;
+    string status = 9;
+}
+
+// Response containing list of books
+message BookListResponse {
+    repeated BookResponse books = 1;
+}
+
+// Request to issue a book to a user
+message IssueBookRequest {
+   repeated string bookId = 1;
+    bool issueBooks =2;
+}
+
+// Response after issuing a book
+message IssueBookResponse {
+    string bookId = 1;
+    string userId = 2;
+    string issueDate = 3;   // ISO 8601 format
+    string dueDate = 4;
+    string message = 5;
+}
+
+// Request to return a book
+message ReturnBookRequest {
+    string bookId = 1;
+    string userId = 2;
+}
+
+// Response after returning a book
+message ReturnBookResponse {
+    string bookId = 1;
+    string userId = 2;
+    string returnDate = 3;
+    string message = 4;
+}
