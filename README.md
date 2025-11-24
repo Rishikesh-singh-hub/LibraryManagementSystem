@@ -40,9 +40,9 @@ Internal communication:
 | Framework | Spring Boot |
 | Security | Spring Security + JWT |
 | API Style | REST + gRPC |
-| Database | MySQL/PostgreSQL |
+| Database | Mongodb |
 | Build Tool | Maven |
-| Others | Lombok, Validation, Docker-ready structure |
+| Others | Lombok, Validation |
 
 ---
 
